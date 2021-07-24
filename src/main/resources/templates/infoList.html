@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Person List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div>
+    <table border="1">
+        <tr>
+            <th>bAccount</th>
+            <th>InActive</th>
+            <th>InPassive</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>OutActive</th>
+            <th>OutPassive</th>
+        </tr>
+        <tr th:each="info : ${infoList}">
+            <td th:utext="${info.getBAccount()}">...</td>
+            <td th:utext="${info.getInActive()}">...</td>
+            <td th:utext="${info.getInPassive()}">...</td>
+            <td th:utext="${info.getDebit()}">...</td>
+            <td th:utext="${info.getCredit()}">...</td>
+            <td th:utext="${info.getOutActive()}">...</td>
+            <td th:utext="${info.getOutPassive()}">...</td>
+
+        </tr>
+    </table>
+</div>
+</body>
+</html>
