@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Add Person</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h6>Add info from excel to DB</h6>
+
+
+<form th:action="@{/addToDB}"
+      th:object="${pathToExcelForm}" method="POST">
+    path to excel file
+    <input type="text" th:field="*{path}" />
+    <br/>
+<!--    name for storing in DB-->
+    name for excel file
+    <input type="text" th:field="*{name}" />
+    <br/>
+    <input type="submit" value="Create" />
+</form>
+
+<br/>
+
+<!-- Check if errorMessage is not null and not empty -->
+
+<!--<div th:if="${errorMessage}" th:utext="${errorMessage}"-->
+<!--     style="color:red;font-style:italic;">-->
+<!--    ...-->
+<!--</div>-->
+
+</body>
+</html>
