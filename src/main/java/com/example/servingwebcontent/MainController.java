@@ -18,6 +18,7 @@ import java.util.List;
 public class MainController {
 
     static List<Info> infoList;
+    static List<FileForm> filesList;
 
     static {
     }
@@ -27,7 +28,7 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping(value = { "/addToDB" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/addToDB"}, method = RequestMethod.GET)
     public String showAddToDB(Model model) {
 
         PathToExcelForm pathToExcelForm = new PathToExcelForm();
@@ -38,42 +39,39 @@ public class MainController {
 
     @RequestMapping(value = {"/addToDB"}, method = RequestMethod.POST)
     public String addToDB(Model model,
-                             @ModelAttribute("pathToExcelForm") PathToExcelForm pathToExcelForm) {
+                          @ModelAttribute("pathToExcelForm") PathToExcelForm pathToExcelForm) throws SQLException, ClassNotFoundException, IOException {
         String path = pathToExcelForm.getPath();
-        //String name = pathToExcelForm.getName();
+        String name = pathToExcelForm.getName();
 
-        List<Info> listToFillDB = new LinkedList<>();
+        List<Info> listToFillDB;
 
         Parser parser = new Parser();
-        try {
-            parser.parse(path);
-        } catch (IOException e) {
-            System.out.println("wrong path to file");
-        }
+        parser.parse(path, name);
         listToFillDB = parser.returnInfo();
 
         DBHandler dbHandler = new DBHandler();
+        dbHandler.fillTable(listToFillDB);
 
-        try {
-            dbHandler.fillTable(listToFillDB);
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            infoList = dbHandler.takeFromBD();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
+        System.out.println(name);
+        dbHandler.addNameOfExcelFile(name);
 
         return "redirect:/index";
+    }
+
+    @RequestMapping(value = {"/showFiles"}, method = RequestMethod.GET)
+    public String showFiles(Model model) throws SQLException, ClassNotFoundException {
+        DBHandler dbHandler = new DBHandler();
+        filesList = dbHandler.getFileNames();
+
+        model.addAttribute("filesList", filesList);
+        return "showFiles";
     }
 
     @RequestMapping(value = {"/infoList"}, method = RequestMethod.GET)
     public String infoList(Model model) {
         DBHandler dbHandler = new DBHandler();
         try {
-            infoList = dbHandler.takeFromBD();
+            infoList = dbHandler.takeAllFromBD();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }

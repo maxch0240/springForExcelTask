@@ -17,7 +17,7 @@ public class Parser {
     private final List<Info> listInfo = new LinkedList<>();
 
 
-    public void parse(String name) throws IOException {
+    public void parse(String name, String fileName) throws IOException {
         InputStream in = new FileInputStream(name);
         HSSFWorkbook wb = new HSSFWorkbook(in);
 
@@ -67,7 +67,8 @@ public class Parser {
                     cell4.getNumericCellValue(),
                     cell5.getNumericCellValue(),
                     cell6.getNumericCellValue(),
-                    cell7.getNumericCellValue()
+                    cell7.getNumericCellValue(),
+                    fileName
             ));
         }
     }

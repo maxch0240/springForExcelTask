@@ -12,7 +12,9 @@ public class Info {
     private double outActive;
     private double outPassive;
 
-    public Info(int bAccount, double inActive, double inPassive, double debit, double credit, double outActive, double outPassive) {
+    private String fileName;
+
+    public Info(int bAccount, double inActive, double inPassive, double debit, double credit, double outActive, double outPassive, String fileName) {
         this.bAccount = bAccount;
         this.inActive = inActive;
         this.inPassive = inPassive;
@@ -20,6 +22,7 @@ public class Info {
         this.credit = credit;
         this.outActive = outActive;
         this.outPassive = outPassive;
+        this.fileName = fileName;
     }
 
 
@@ -77,6 +80,14 @@ public class Info {
 
     public void setOutPassive(double outPassive) {
         this.outPassive = outPassive;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
 }

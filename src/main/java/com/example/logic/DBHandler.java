@@ -25,7 +25,7 @@ public class DBHandler {
 
         for (Info inf : infoList) {
             assert conn != null;//rewrite
-            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO test VALUES (?, ?, ?, ?, ?, ?, ?);");
+            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO test VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 
             preparedStatement.setInt(1, inf.getBAccount());
             preparedStatement.setDouble(2, inf.getInActive());
@@ -34,6 +34,7 @@ public class DBHandler {
             preparedStatement.setDouble(5, inf.getCredit());
             preparedStatement.setDouble(6, inf.getOutActive());
             preparedStatement.setDouble(7, inf.getOutPassive());
+            preparedStatement.setString(8, inf.getFileName());
 
             preparedStatement.executeUpdate();
         }
@@ -44,11 +45,23 @@ public class DBHandler {
         assert conn != null;
         Statement st = conn.createStatement();
         String sql = "delete from test;";
+        String sql2 = "delete from excelFiles;";
         st.executeUpdate(sql);
+        st.executeUpdate(sql2);
         System.out.println("delete data");
     }
 
-    public List<Info> takeFromBD() throws ClassNotFoundException, SQLException {
+    public void addNameOfExcelFile(String name) throws ClassNotFoundException, SQLException {
+        Connection conn = connect();
+
+        assert conn != null;
+        PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO excelfiles VALUES (?);");
+
+        preparedStatement.setString(1, name);
+        preparedStatement.executeUpdate();
+    }
+
+    public List<Info> takeAllFromBD() throws ClassNotFoundException, SQLException {
         Connection conn = connect();
         List<Info> infoList = new LinkedList<>();
 
@@ -63,10 +76,26 @@ public class DBHandler {
                     rs.getDouble(4),
                     rs.getDouble(5),
                     rs.getDouble(6),
-                    rs.getDouble(7)));
+                    rs.getDouble(7),
+                    rs.getString(8)));
         }
 
         return infoList;
+    }
+
+    public List<FileForm> getFileNames() throws ClassNotFoundException, SQLException {
+        Connection conn = connect();
+        List<FileForm> filesList = new LinkedList<>();
+
+        assert conn != null;
+        Statement st = conn.createStatement();
+        String sql = ("SELECT * FROM excelfiles;");
+        ResultSet rs = st.executeQuery(sql);
+        while(rs.next()) {
+            filesList.add(new FileForm(rs.getString(1)));
+        }
+
+        return filesList;
     }
 }
 
