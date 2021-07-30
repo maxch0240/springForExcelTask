@@ -7,13 +7,14 @@
 </head>
 <body>
 <div>
-    <table border="1">
+    <table>
         <tr>
             <th>file name</th>
 
         </tr>
         <tr th:each="file : ${filesList}">
             <td th:utext="${file.getFileName()}">...</td>
+            <td><a th:href="@{showFiles/{fileName}(fileName=${file.getFileName()})}">show</a></td>
         </tr>
     </table>
 </div>

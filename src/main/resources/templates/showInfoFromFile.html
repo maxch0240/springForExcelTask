@@ -16,9 +16,8 @@
             <th>Credit</th>
             <th>OutActive</th>
             <th>OutPassive</th>
-            <th>FileName</th>
         </tr>
-        <tr th:each="info : ${infoList}">
+        <tr th:each="info : ${showFileList}">
             <td th:utext="${info.getBAccount()}">...</td>
             <td th:utext="${info.getInActive()}">...</td>
             <td th:utext="${info.getInPassive()}">...</td>
@@ -26,7 +25,6 @@
             <td th:utext="${info.getCredit()}">...</td>
             <td th:utext="${info.getOutActive()}">...</td>
             <td th:utext="${info.getOutPassive()}">...</td>
-            <td th:utext="${info.getFileName()}">...</td>
         </tr>
     </table>
 </div>

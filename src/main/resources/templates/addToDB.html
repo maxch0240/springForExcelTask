@@ -6,9 +6,6 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<h6>Add info from excel to DB</h6>
-
-
 <form th:action="@{/addToDB}"
       th:object="${pathToExcelForm}" method="POST">
     path to excel file

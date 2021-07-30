@@ -5,23 +5,24 @@ import com.example.logic.Parser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.example.logic.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 
 @Controller
 public class MainController {
 
+    //the entire database
     static List<Info> infoList;
+    //database of added files
     static List<FileForm> filesList;
-
-    static {
-    }
+    //list for for data from the file
+    static List<Info> showFileList;
 
     @RequestMapping(value = {"/", "index"}, method = RequestMethod.GET)
     public String index() {
@@ -49,46 +50,47 @@ public class MainController {
         parser.parse(path, name);
         listToFillDB = parser.returnInfo();
 
-        DBHandler dbHandler = new DBHandler();
-        dbHandler.fillTable(listToFillDB);
+        DBHandler.fillTable(listToFillDB);
 
         System.out.println(name);
-        dbHandler.addNameOfExcelFile(name);
+        DBHandler.addNameOfExcelFile(name);
 
         return "redirect:/index";
     }
 
     @RequestMapping(value = {"/showFiles"}, method = RequestMethod.GET)
     public String showFiles(Model model) throws SQLException, ClassNotFoundException {
-        DBHandler dbHandler = new DBHandler();
-        filesList = dbHandler.getFileNames();
+        filesList = DBHandler.getFileNames();
 
         model.addAttribute("filesList", filesList);
         return "showFiles";
     }
 
     @RequestMapping(value = {"/infoList"}, method = RequestMethod.GET)
-    public String infoList(Model model) {
-        DBHandler dbHandler = new DBHandler();
-        try {
-            infoList = dbHandler.takeAllFromBD();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-
+    public String infoList(Model model) throws SQLException, ClassNotFoundException {
+        infoList = DBHandler.takeAllFromBD();
         model.addAttribute("infoList", infoList);
 
         return "infoList";
     }
 
-    @RequestMapping(value = {"/truncate"}, method = RequestMethod.GET)
-    public String truncateTable() {
-        try {
-            DBHandler.clearTable();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
+    @RequestMapping(value = {"/clearUpDB"}, method = RequestMethod.GET)
+    public String clearUpDB() throws SQLException, ClassNotFoundException {
+        DBHandler.clearTables();
 
         return "redirect:index";
+    }
+
+
+    @RequestMapping(value = "/showFiles/{fileName}", method = RequestMethod.GET)
+    public String showFileForm(@PathVariable("fileName") String fileName, Model model) throws SQLException, ClassNotFoundException {
+        showFileList = DBHandler.showInfoFromFile(fileName);
+        return "redirect:/showInfoFromFile";
+    }
+
+    @RequestMapping(value = "/showInfoFromFile", method = RequestMethod.GET)
+    public String showInfoFromFile(Model model) {
+        model.addAttribute("showFileList", showFileList);
+        return "showInfoFromFile";
     }
 }

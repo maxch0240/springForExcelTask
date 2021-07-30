@@ -20,7 +20,7 @@ public class DBHandler {
         return null;//rewrite
     }
 
-    public void fillTable(List<Info> infoList) throws SQLException, ClassNotFoundException {
+    public static void fillTable(List<Info> infoList) throws SQLException, ClassNotFoundException {
         Connection conn = connect();
 
         for (Info inf : infoList) {
@@ -40,7 +40,7 @@ public class DBHandler {
         }
     }
 
-    public static void clearTable() throws ClassNotFoundException, SQLException {
+    public static void clearTables() throws ClassNotFoundException, SQLException {
         Connection conn = connect();
         assert conn != null;
         Statement st = conn.createStatement();
@@ -51,7 +51,7 @@ public class DBHandler {
         System.out.println("delete data");
     }
 
-    public void addNameOfExcelFile(String name) throws ClassNotFoundException, SQLException {
+    public static void addNameOfExcelFile(String name) throws ClassNotFoundException, SQLException {
         Connection conn = connect();
 
         assert conn != null;
@@ -61,7 +61,7 @@ public class DBHandler {
         preparedStatement.executeUpdate();
     }
 
-    public List<Info> takeAllFromBD() throws ClassNotFoundException, SQLException {
+    public static List<Info> takeAllFromBD() throws ClassNotFoundException, SQLException {
         Connection conn = connect();
         List<Info> infoList = new LinkedList<>();
 
@@ -83,7 +83,7 @@ public class DBHandler {
         return infoList;
     }
 
-    public List<FileForm> getFileNames() throws ClassNotFoundException, SQLException {
+    public static List<FileForm> getFileNames() throws ClassNotFoundException, SQLException {
         Connection conn = connect();
         List<FileForm> filesList = new LinkedList<>();
 
@@ -96,6 +96,31 @@ public class DBHandler {
         }
 
         return filesList;
+    }
+
+    public static List<Info> showInfoFromFile(String fileName) throws ClassNotFoundException, SQLException {
+        Connection conn = connect();
+        List<Info> fileInfoList = new LinkedList<>();
+
+        assert conn != null;
+        String selectTableSQL = "SELECT * FROM test WHERE fileName = (?);";
+        try (PreparedStatement ps = conn.prepareStatement(selectTableSQL)) {
+
+            ps.setString(1, fileName);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                fileInfoList.add(new Info(rs.getInt(1),
+                        rs.getDouble(2),
+                        rs.getDouble(3),
+                        rs.getDouble(4),
+                        rs.getDouble(5),
+                        rs.getDouble(6),
+                        rs.getDouble(7),
+                        rs.getString(8)));
+            }
+        }
+
+        return fileInfoList;
     }
 }
 
